@@ -1,0 +1,109 @@
+<html ng-app="todoApp">
+
+<head>
+    <title>ng-training</title>
+    <link href="./styles/main.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+    <script src="app.js"></script>
+</head>
+
+<body ng-controller="todoCtrl">
+    <h2>Create a todo</h2>
+    <form ng-submit="addTodo()">
+        <label>Label</label>
+        <input type="text" ng-model="newTodo.name">
+        <br>
+        <label>Priority</label>
+        <select ng-model="newTodo.priority">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+        <br>
+        <label>Done?</label>
+        <input type="checkbox" ng-model="newTodo.done" />
+        <br>
+        <label>Due Date</label>
+        <input type="date" ng-model="newTodo.dueDate">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <h2>Edit a todo</h2>
+    <form ng-submit="updateTodo()">
+        <label>Label</label>
+        <input type="text" ng-model="todoToEdit.name">
+        <br>
+        <label>Priority</label>
+        <select ng-model="todoToEdit.priority">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+        <br>
+        <label>Done?</label>
+        <input type="checkbox" ng-model="todoToEdit.done" />
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <div>
+            <button ng-click="sortBy('dueDate')">Due Date</button>
+            <button ng-click="sortBy('name')">Name </button>
+            <button ng-click="sortBy('priority')">Priority</button>
+    </div>
+    <div>
+    <h2>Pending Tasks</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Label</th>
+            <th>Priority</th>
+            <th>Due Date</th>
+            <th>Done</th>
+            <th>Action</th>
+        </tr>
+        <tr ng-repeat="todo in pendingTodos | orderBy:ordersort" ng-class="todo.done? 'completed': 'pending'">
+            <td> {{todo.id}} </td>
+            <td> {{todo.name}} </td>
+            <td> {{todo.priority}} </td>
+            <td> {{todo.dueDate | date :"dd.MM.y"}} </td>
+            <td> {{ todo.done ? '&#10003' : '&#10005' }} </td>
+            <td>
+                <button ng-click="editTodo(todo)">edit</button>
+                <button ng-click="deleteTodo(todo)">delete</button>
+            </td>
+        </tr>
+    </table>
+    </div>
+    <div>
+        <h2>Over Due Tasks</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Label</th>
+                <th>Priority</th>
+                <th>Due Date</th>
+                <th>Done</th>
+                <th>Action</th>
+            </tr>
+            <tr ng-repeat="todo in overdueTodos | orderBy :ordersort " ng-class="todo.done? 'completed': 'overdue'">
+                <td> {{todo.id}} </td>
+                <td> {{todo.name}} </td>
+                <td> {{todo.priority}} </td>
+                <td>  {{todo.dueDate | date :"dd.MM.y"}} </td>
+                <td> {{ todo.done ? '&#10003' : '&#10005' }} </td>
+                <td>
+                    <button ng-click="editTodo(todo)">edit</button>
+                    <button ng-click="deleteTodo(todo)">delete</button>
+                </td>
+            </tr>
+        </table>
+        </div>
+        <script type="text/javascript"  src="./scripts/controllers/main.js"></script> 
+        <script type="text/javascript"  src="./scripts/services/data.js"></script> 
+    </body>
+
+</html>
