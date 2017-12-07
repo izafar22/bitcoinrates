@@ -1,0 +1,17 @@
+{
+  "name": "myTodoApp",
+  "description": "a todo app",
+  "main": "public/app.js",
+  "authors": [
+    "imran zafar"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/izafar22/myTodoApp",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
