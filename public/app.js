@@ -1,6 +1,6 @@
 'use strict';
 
-var app=angular.module('todoApp', []);
+var app=angular.module('todoApp',[]);
     
 app.config(function($locationProvider){
 

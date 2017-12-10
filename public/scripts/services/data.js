@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('todoApp')
-.service('todoService', function($http,$httpParamSerializer) {
+.service('todoService', function($http,$httpParamSerializer,$q) {
     var url = 'http://localhost:3000/task';
 
     this.getAll = function() {
@@ -13,6 +13,18 @@ angular.module('todoApp')
         throw err;
         });
     };
+
+    this.getData=function(url){
+        var defer=$q.defer();
+        $http.get(url)
+        .then(function(res){
+            console.log("responsee",res);
+        defer.resolve(res.data);
+        },function(reason){
+        defer.reject(reason);
+        });
+        return defer.promise;
+    }
 
     this.add = function(data) {
         var path=url + '/create';

@@ -1,109 +1,148 @@
+<!DOCTYPE html>
 <html ng-app="todoApp">
 
 <head>
-    <title>ng-training</title>
-    <link href="./styles/main.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
-    <script src="app.js"></script>
+	<meta charset='UTF-8'>
+	
+	<title>Responsive Table</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="./styles/style.css">
+	<script type="text/javascript" src="./bower_components/angular/angular.js"></script>
+	<script type="text/javascript" src="./app.js"></script>
+	<style>
+	
+	/* 
+	Max width before this PARTICULAR table gets nasty
+	This query will take effect for any screen smaller than 760px
+	and also iPads specifically.
+	*/
+	@media 
+	only screen and (max-width: 760px),
+	(min-device-width: 768px) and (max-device-width: 1024px)  {
+	
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr { 
+			display: block; 
+		}
+		
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr { 
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+		
+		tr { border: 1px solid #ccc; }
+		
+		td { 
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee; 
+			position: relative;
+			padding-left: 50%; 
+		}
+		
+		td:before { 
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 6px;
+			left: 6px;
+			width: 45%; 
+			padding-right: 10px; 
+			white-space: nowrap;
+		}
+		
+		/*
+		Label the data
+		*/
+		td:nth-of-type(1):before { content: "Exchange"; }
+		td:nth-of-type(2):before { content: "DP Buy"; }
+		td:nth-of-type(3):before { content: "DP Sell"; }
+		td:nth-of-type(4):before { content: "Txn Fee"; }
+		td:nth-of-type(5):before { content: "Final Buy"; }
+		td:nth-of-type(6):before { content: "Final Sell"; }
+		
+	}
+	
+	/* Smartphones (portrait and landscape) ----------- */
+	@media only screen
+	and (min-device-width : 320px)
+	and (max-device-width : 480px) {
+		body { 
+			padding: 0; 
+			margin: 0; 
+			width: 320px; }
+		}
+	
+	/* iPads (portrait and landscape) ----------- */
+	@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+		body { 
+			width: 495px; 
+		}
+	}
+	
+	</style>
+	<!--<![endif]-->
+
 </head>
 
 <body ng-controller="todoCtrl">
-    <h2>Create a todo</h2>
-    <form ng-submit="addTodo()">
-        <label>Label</label>
-        <input type="text" ng-model="newTodo.name">
-        <br>
-        <label>Priority</label>
-        <select ng-model="newTodo.priority">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-        <br>
-        <label>Done?</label>
-        <input type="checkbox" ng-model="newTodo.done" />
-        <br>
-        <label>Due Date</label>
-        <input type="date" ng-model="newTodo.dueDate">
-        <br>
-        <input type="submit" value="Submit">
-    </form>
-    <h2>Edit a todo</h2>
-    <form ng-submit="updateTodo()">
-        <label>Label</label>
-        <input type="text" ng-model="todoToEdit.name">
-        <br>
-        <label>Priority</label>
-        <select ng-model="todoToEdit.priority">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-        </select>
-        <br>
-        <label>Done?</label>
-        <input type="checkbox" ng-model="todoToEdit.done" />
-        <br>
-        <input type="submit" value="Submit">
-    </form>
-    <div>
-            <button ng-click="sortBy('dueDate')">Due Date</button>
-            <button ng-click="sortBy('name')">Name </button>
-            <button ng-click="sortBy('priority')">Priority</button>
-    </div>
-    <div>
-    <h2>Pending Tasks</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Label</th>
-            <th>Priority</th>
-            <th>Due Date</th>
-            <th>Done</th>
-            <th>Action</th>
-        </tr>
-        <tr ng-repeat="todo in pendingTodos | orderBy:ordersort" ng-class="todo.done? 'completed': 'pending'">
-            <td> {{todo.id}} </td>
-            <td> {{todo.name}} </td>
-            <td> {{todo.priority}} </td>
-            <td> {{todo.dueDate | date :"dd.MM.y"}} </td>
-            <td> {{ todo.done ? '&#10003' : '&#10005' }} </td>
-            <td>
-                <button ng-click="editTodo(todo)">edit</button>
-                <button ng-click="deleteTodo(todo)">delete</button>
-            </td>
-        </tr>
-    </table>
-    </div>
-    <div>
-        <h2>Over Due Tasks</h2>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Label</th>
-                <th>Priority</th>
-                <th>Due Date</th>
-                <th>Done</th>
-                <th>Action</th>
-            </tr>
-            <tr ng-repeat="todo in overdueTodos | orderBy :ordersort " ng-class="todo.done? 'completed': 'overdue'">
-                <td> {{todo.id}} </td>
-                <td> {{todo.name}} </td>
-                <td> {{todo.priority}} </td>
-                <td>  {{todo.dueDate | date :"dd.MM.y"}} </td>
-                <td> {{ todo.done ? '&#10003' : '&#10005' }} </td>
-                <td>
-                    <button ng-click="editTodo(todo)">edit</button>
-                    <button ng-click="deleteTodo(todo)">delete</button>
-                </td>
-            </tr>
-        </table>
-        </div>
-        <script type="text/javascript"  src="./scripts/controllers/main.js"></script> 
-        <script type="text/javascript"  src="./scripts/services/data.js"></script> 
-    </body>
+
+	<div id="page-wrap">
+
+	<h1>Bitcoin Rate Table</h1><h2>{{refresh}}</h2>
+	<h1>Bitcoin Rate Table zebpay</h1><h2>{{zebpay}}</h2>
+	<h1>Bitcoin Rate Table koinex</h1><h2>{{koinex}}</h2>
+  
+    
+	<p>Below is the rate per 1 BTC on different portals and possible arbitrage opportunity.</p>
+   
+	<table>
+		<thead>
+		<tr>
+			<th>Exchange</th>
+			<th>Buy Rate(Rs)</th>
+			<th>Sell Rate(Rs)</th>
+			<th>Fees%</th>
+			<th>Final Buy Rate </th>
+			<th>Final Sell Rate </th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr id="Zebpay">
+			<td class="x">Zebpay</td>
+			<td class="br">12</td>
+			<td class="sr">10</td>
+			<td class="txnf">0.5</td>
+			<td class="fb">14</td>
+			<td class="fs">9</td>
+		</tr>
+		<tr id="Koinex">
+			<td class="x">Koinex</td>
+			<td class="br">12</td>
+			<td class="sr">10</td>
+			<td class="txnf">0.5</td>
+			<td class="fb">14</td>
+			<td class="fs">9</td>
+		</tr>
+		<tr id="Pocketbits">
+			<td class="x">Pocketbits</td>
+			<td class="br">12</td>
+			<td class="sr">10</td>
+			<td class="txnf">0.5</td>
+			<td class="fb">14</td>
+			<td class="fs">9</td>
+		</tr>
+		
+		</tbody>
+	</table>
+	
+	</div>
+<script type="text/javascript" src="./scripts/controllers/main.js"></script>		
+<script type="text/javascript" src="./scripts/services/data.js"></script>
+</body>
 
 </html>

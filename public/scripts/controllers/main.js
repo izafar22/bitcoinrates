@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('todoApp')
-.controller('todoCtrl', function($scope, todoService) {
-     $scope.status=false;
+.controller('todoCtrl', function($scope, todoService,$http) {
+    var zebpayUrl='https://www.zebapi.com/api/v1/market/ticker/btc/inr';
+    var koinexUrl='https://koinex.in/api/ticker'; 
+    $scope.status=false;
      $scope.overdueTodos=[];
      $scope.pendingTodos=[];
             function loadTodos() {
@@ -26,6 +28,21 @@ angular.module('todoApp')
                         loadTodos();
                     });
             };
+
+           $scope.refresh="Refresh";
+
+           todoService.getData(zebpayUrl)
+           .then(function(res){
+               console.log("zebpay",res);
+              $scope.zebpay=res;
+           });
+
+           todoService.getData(koinexUrl)
+           .then(function(res){
+               $scope.koinex=res;
+           });
+            $scope.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
+            
 
             $scope.editTodo = function(todo) {
                 console.log(todo);
